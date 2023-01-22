@@ -1,18 +1,197 @@
 # SendText
-SendText is an AHK v2 script, helping to manage your hotstrings and texts with just one file.
+SendText is an AutoHotkey v2 script that simplifies the management of your hotstrings and text snippets.
+
+The script includes 155 built-in symbols and special characters and allows for the quick and easy addition of new texts and hotstrings.
+
+----
+
+## Features
+
+- send texts via win32 menus or using hotstrings
+- manages categories, menu items and hotstrings from one file
+- can be integrated easily into your own existing config, menu
+- emoji support: 😉
+- old school ascii texts: ଘ(੭*ˊᵕˋ)੭* ̀ˋ ɪɴᴛᴇʀɴᴇᴛ!
+- long text support
+- warn compatible
 
 <img src="https://user-images.githubusercontent.com/105103590/213881464-54c186b6-986d-4b86-ab00-55271ef6860e.png" width="537" height="450">
 
 ## How to use it?
 
-### Define your texts, hotstrings in the ini file:
+Please note ☝ this script `#Requires AutoHotkey >=2.0`.  
 
-<img src="https://user-images.githubusercontent.com/105103590/213881541-3249e32e-1753-4c1c-a445-0df1c149bf0d.png" width="532" height="430">
+1. Download both [SendText.ahk](https://github.com/bceenaeiklmr/SendText/blob/main/SendText.ahk) and [hotstring.ini](https://github.com/bceenaeiklmr/SendText/blob/main/hotstring.ini) into the same folder.
+2. Run [SendText.ahk](https://github.com/bceenaeiklmr/SendText/blob/main/SendText.ahk)
+3. Hold `Mbutton` down for at least 500 ms or press simultaneously `Win + c` to show the menu.
+4. Select an element and the text will be pasted into the last active window.
+     
+   ⏵ Alternatively you can call the snippets via [`hotstrings`](https://www.autohotkey.com/docs/v2/Hotstrings.htm).
+   
+By default all hotstrings start with the semicolon `:` character. You can alter this value.
 
-### A) Paste the strings/texts from the Menu
+## Texts & hotstrings in the ini file:
 
-### B) Use Hotstrings
+By default the scripts 100+ built-in texts, special characters, symbols categorized by 8 main categories.
 
-The ini file's second column contains the triggering hotstrings for each string/text.
+The following picture represents one category, a set of hotstrings and item menus.
 
+```ahk
+[Emoji faces]
 
+eyes                     | eyes, rolleyes, check        | 👀
+smile                    | smile, grin                  | 😁
+crying out loud          | cryingoutloud, col           | 😂
+smiling eyes             | smilingeyes                  | 😄
+open mouth               | openmouth                    | 😃
+joy                      | joy, tears                   | 😂
+rolling on the floor     | rofl                         | 🤣
+laughing hand            | laughing                     | 🤭
+embarassed               | embarassed                   | 😊
+halo                     | halo, saint                  | 😇
+upside down              | upsidedown                   | 🙃
+winking                  | wink                         | 😉
+relived                  | relived                      | 😌
+love eyes                | love                         | 😍
+delicous                 | delicious, toungue, yummi    | 😋
+sunglasses               | sunglass, cool               | 😎
+hearths                  | hearth                       | 🥰
+thinking                 | think                        | 🤔
+```
+
+Here are a few example of each categories:
+
+`[Roman Numerals]` I, II, III, IV, ...
+
+`[AutoHotkey]` keystrokes with Send()
+
+`[Brackets]` 〔...〕, ⌜⌝, ...
+
+`[ASCII texts]` ଘ(੭*ˊᵕˋ)੭* ̀ˋ ɪɴᴛᴇʀɴᴇᴛ!, (҂^.^)ᕤ, ...
+
+`[ASCII symbols]` ⏵, ⟫, ⊙, €, ∑, ...
+
+`[Emoji symbols]` ✔, ⛅, ⏰, ...
+
+`[Emoji faces]` 👀, 😍, ...
+
+`[Emoji hands]` 🤙, 👍, ...
+
+## Define a new menu category
+
+Simply put `[NewCategory]` into the ini file. 
+
+All lines under NewCategory until the next Category will be listed in the NewCategory menu.
+
+*Spaces can be used.*
+
+```ini
+[NewCategory]
+...
+texts
+...
+[NextCategory]
+```
+
+*Closing the category tag is not necessary. `Omitting NextCategory` will set Newcategory to the last category.*
+
+## Creating Menu items
+
+Menu items can be created using the following format.
+
+By default the delimiter is the pipe `|` character.
+
+`displayed text | menu item title | hotstring | ahk code`
+
+For example: `perfect | ok, perfect | 👌` will create a menu item.
+
+The displayed text in the menu will be `perfect A_Tab 👌`.
+
+The third column indicates there are two hotstrings for this text.
+
+Typing either `:ok` or `:perfect` will display 👌.
+
+## Send support
+
+Sending hotkeys is supported by using the `*` character as a first character in the fourth column.
+
+This way AutoHotkey will send the strings using the built-in `Send` command.
+
+This helps to send not just strings/texts but hotkeys too.
+
+### - example 1 -
+
+`... | ... | ... | *; {# 42}`
+
+will send (display) the following text:
+
+`; ##########################################`
+
+### - example 2 -
+
+Combine multiple hotkeys this way, e.g
+
+Please note, the default keystrokes in the ini file are for Visual Studio Code. ☝
+
+`... | ... | ... | *(x = y) ? 1 : 0{Home}{Right}{ShiftDown}{Right 5}{ShiftUp}`
+
+Will display
+
+`... | ... | ... | *(x = y) ? 1 : 0` and the selected string will be `x = y`.
+
+### - example 3 -
+
+Typing `:for` will send the following string with AHK's `Send()` function:
+
+`"for k, v in obj {{}{Enter}{Left 2}{Tab}{Up}{End}{Left 2}{ShiftDown}{Left 3}{ShiftUp}"`
+
+and will send
+
+```ahk
+for k, v in obj {
+    
+}
+```
+
+And the `obj` phrase will be selected automatically.
+
+### - example 4 -
+
+Typing `:if` will send:
+
+`"if (condition) {{}{Enter}{Down}{End}{Space}else{Space}{{}{Enter 2}{}}"` `"."`
+
+`"{Up 4}{Home}{Right 4}{CtrlDown}{ShiftDown}{Right}{CtrlUp}{ShiftUp}"`
+
+And will create a standard if-else block:
+
+```ahk
+if (condition) {
+
+else {
+
+}
+```
+And reselect the `condition` word.
+
+## Reselect a word
+
+You can use standard hotkeys like reselection.
+
+Using `{CtrlDown}{ShiftDown}{Left}{CtrlUp}{ShiftUp}` or `{CtrlDown}{ShiftDown}{Left}{CtrlUp}{ShiftUp}`
+
+will reselect a word.
+
+## Sending longer texts
+
+In the fourth column copy the text you want. (without `*` as first chr)
+
+`... | ... | ... | ImagineThisIsAVeryLongText`
+
+This way the fourth element content will be copied to clipboard and will be sent by using the clipboard.
+
+After a successfull paste the previous (saved) clipboard content will be restored.
+
+### AHK - IniRead
+
+Unfortunately AutoHotkey v2 IniRead function does not support UTF-16 (Emoji characters), on the other hand, FileRead works.

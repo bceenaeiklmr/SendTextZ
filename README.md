@@ -129,7 +129,7 @@ Please note, the default keystrokes in the ini file are for Visual Studio Code. 
 
 Will display
 
-`... | ... | ... | *(x = y) ? 1 : 0` and the selected string will be `x = y`.
+`(x = y) ? 1 : 0` and the selected string will texts `x = y`.
 
 ### - example 3 -
 

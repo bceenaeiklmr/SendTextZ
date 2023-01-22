@@ -8,7 +8,7 @@ The script includes 155 built-in symbols and special characters and allows for t
 ## Features
 
 - send texts via win32 menus or using hotstrings
-- manages categories, menu items and hotstrings from one file
+- manages categories, menu items, and hotstrings from one file
 - can be integrated easily into your own existing config, menu
 - emoji support: 😉
 - old school ascii texts: ଘ(੭*ˊᵕˋ)੭* ̀ˋ ɪɴᴛᴇʀɴᴇᴛ!
@@ -26,15 +26,15 @@ Please note ☝ this script `#Requires AutoHotkey >=2.0`.
 3. Hold `Mbutton` down for at least 500 ms or press simultaneously `Win + c` to show the menu.
 4. Select an element and the text will be pasted into the last active window.
      
-   ⏵ Alternatively you can call the snippets via [`hotstrings`](https://www.autohotkey.com/docs/v2/Hotstrings.htm).
+   ⏵ Alternatively, you can call the snippets via [`hotstrings`](https://www.autohotkey.com/docs/v2/Hotstrings.htm).
    
-By default all hotstrings start with the semicolon `:` character. You can alter this value.
+By default, all hotstrings start with the semicolon `:` character. You can alter this value.
 
 ## Texts & hotstrings in the ini file:
 
-By default the scripts 100+ built-in texts, special characters, symbols categorized by 8 main categories.
+The scripts contain 100+ built-in texts, special characters, and symbols categorized by 8 main categories.
 
-The following picture represents one category, a set of hotstrings and item menus.
+The following picture represents one category, a set of hotstrings, and item menus.
 
 ```ahk
 [Emoji faces]
@@ -69,7 +69,7 @@ Here are a few example of each categories:
 - `[Emoji faces]` 👀, 😍, ...
 - `[Emoji hands]` 🤙, 👍, ...
 
-## Define a new menu category
+## Define a New Menu Category
 
 Simply put `[NewCategory]` into the ini file. 
 
@@ -91,7 +91,7 @@ texts
 
 Menu items can be created using the following format.
 
-By default the delimiter is the pipe `|` character.
+By default, the delimiter is the pipe `|` character.
 
 `displayed text | menu item title | hotstring | ahk code`
 
@@ -105,7 +105,7 @@ Typing either `:ok` or `:perfect` will display 👌.
 
 ## Send support
 
-Sending hotkeys is supported by using the `*` character as a first character in the fourth column.
+Sending hotkeys is supported by using the `*` character as the first character in the fourth column.
 
 This way AutoHotkey will send the strings using the built-in `Send` command.
 
@@ -133,7 +133,7 @@ Will display
 
 ### - example 3 -
 
-Typing `:for` will send the following string with AHK's `Send()` function:
+Typing `:for` will send the following string with AHK `Send()` function:
 
 `"for k, v in obj {{}{Enter}{Left 2}{Tab}{Up}{End}{Left 2}{ShiftDown}{Left 3}{ShiftUp}"`
 
@@ -176,14 +176,22 @@ will reselect a word.
 
 ## Sending longer texts
 
-In the fourth column copy the text you want. (without `*` as first chr)
+In the fourth column copy the text you want. (without `*` as the first chr)
 
 `... | ... | ... | ImagineThisIsAVeryLongText`
 
-This way the fourth element content will be copied to clipboard and will be sent by using the clipboard.
+This way the fourth element content will be copied to the clipboard and will be sent by using the clipboard.
 
-After a successfull paste the previous (saved) clipboard content will be restored.
+After a successful paste the previous (saved) clipboard content will be restored.
 
-### AHK - IniRead
+## Add to your existing menu
 
-Unfortunately AutoHotkey v2 IniRead function does not support UTF-16 (Emoji characters), on the other hand, FileRead works.
+Copy the `sendText()` function to your script.
+
+Call `texts := sendText()`
+
+Add to your menu with: `YourMenuName.Add("Texts", texts)`
+
+## AHK - IniRead
+
+Unfortunately, AutoHotkey v2 IniRead function does not support UTF-16 (Emoji characters), on the other hand, FileRead works.

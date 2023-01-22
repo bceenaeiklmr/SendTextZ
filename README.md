@@ -186,11 +186,11 @@ After a successful paste the previous (saved) clipboard content will be restored
 
 ## Add to your existing menu
 
-Copy the `sendText()` function to your script.
+Copy the `SendText()` function to your script.
 
-Call `texts := sendText()`
+Call `Texts := SendText()`
 
-Add to your menu with: `YourMenuName.Add("Texts", texts)`
+Add to your menu with: `YourMenuName.Add("Texts", Texts)`
 
 ## AHK - IniRead
 

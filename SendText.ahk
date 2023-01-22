@@ -26,7 +26,8 @@ Main.Add("Texts", Text)
 
 previewIcon := 0
 if previewIcon {
-    Main.Add("Icons", PreviewIcons())
+    pIcon := PreviewIcons()
+    Main.Add("Icons", pIcon)
 }
 
 ; set icons
@@ -107,18 +108,19 @@ sendText(TriggerHotkey := ":") {
 }
 
 PreviewIcons() {
-    Icons := Menu()
+    local i
+    IconMenu := Menu()
     loop 10 {
         i := A_index
         submenu := Menu()
-        Icons.Add(A_index, submenu)
+        IconMenu.Add(A_index, submenu)
         loop 32 {
             ii := A_index + 32*(i-1)
             submenu.Add(ii, (*) => "")
             submenu.SetIcon(ii, "Shell32.dll", A_index + 32*(i-1))
         }
     }
-    return Icons
+    return IconMenu
 }
 
 SendStr(Strg, *) {

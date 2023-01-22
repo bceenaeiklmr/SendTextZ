@@ -99,9 +99,9 @@ For example: `perfect | ok, perfect | 👌` will create a menu item.
 
 The displayed text in the menu will be `perfect A_Tab 👌`.
 
-The third column indicates there are two hotstrings for this text. (separete hotstring with a colon `,` or `, ` )
+The third column indicates there are two hotstrings for this text. (separate the hotstring with a colon `","` or `", "` )
 
-Typing either `:ok` or `:perfect` will display 👌.
+Typing either `:ok` or `:perfect` will display `👌`.
 
 ## Send support
 

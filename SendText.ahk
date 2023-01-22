@@ -15,15 +15,19 @@ Main := Menu()
 Sys  := Menu()
 
 Main.Add("System", sys)
-Sys.Add("My computer", openMyComputer)
-Sys.Add("Recycle bin", openRecycleBin)
-Sys.Add("My documents", openMyDocuments)
-Sys.Add("Downloads", openMyDownloadFolder)
-Sys.Add("My desktop", openMyDesktop)
+Sys.Add("My computer",  (*) => Run("::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"))
+Sys.Add("Recycle bin",  (*) => Run("::{645FF040-5081-101B-9F08-00AA002F954E}"))
+Sys.Add("Downloads",    (*) => Run("C:\users\" A_userName "\Downloads"))
+Sys.Add("My documents", (*) => Run(A_MyDocuments))
+Sys.Add("My desktop",   (*) => Run(A_desktop))
 
-Text := sendText()
-
+Text := sendText(":")
 Main.Add("Texts", Text)
+
+previewIcon := 0
+if previewIcon {
+    Main.Add("Icons", PreviewIcons())
+}
 
 ; set icons
 Main.SetIcon("Texts",       "Shell32.dll", 75)
@@ -41,9 +45,7 @@ MButton::showMain(0) ; middle mouse button after 500 ms
 
 ; ############################################
 
-sendText() {
-
-    TriggerHotkey := ":"
+sendText(TriggerHotkey := ":") {
 
     ; Unfortunately, IniRead doesn't support UTF-16 which is neccessary to use emojis
     Input := FileRead(A_ScriptDir "\hotstring.ini")
@@ -91,8 +93,9 @@ sendText() {
                 hk.Text := Trim(hk.Code)
             }
             ; register hotstrings
-            for hstr in StrSplit(hk.HotStrg, ",") {
-                HotString(":*:" TriggerHotkey hstr, SendStr.Bind(hk.text))
+            hStrings := StrSplit(hk.HotStrg, ",")
+            for hStr in hStrings {
+                HotString(":*:" TriggerHotkey Trim(hStr), SendStr.Bind(hk.text))
             }
             
         }
@@ -103,23 +106,20 @@ sendText() {
     
 }
 
-/* Preview icons
-preview := 1
-if preview {
+PreviewIcons() {
     Icons := Menu()
-    Main.Add("Icons", Icons)
     loop 10 {
         i := A_index
         submenu := Menu()
         Icons.Add(A_index, submenu)
         loop 32 {
             ii := A_index + 32*(i-1)
-            submenu.Add(ii, empty)
+            submenu.Add(ii, (*) => "")
             submenu.SetIcon(ii, "Shell32.dll", A_index + 32*(i-1))
         }
     }
+    return Icons
 }
-*/
 
 SendStr(Strg, *) {
     if (SubStr(Strg, 1, 1) == "*")
@@ -128,10 +128,10 @@ SendStr(Strg, *) {
     A_Clipboard := ""
     Sleep 50
     A_Clipboard := Strg
-    if !ClipWait(.5, 0)
-        return
-    Send("{CtrlDown}v{CtrlUp}")
-    Sleep 100
+    if ClipWait(.5, 0) {
+        Send("{CtrlDown}v{CtrlUp}")
+        Sleep 100
+    }
     A_Clipboard := ClipSaved
     return
 }
@@ -150,24 +150,4 @@ showMain(Instant := 1) {
         if !pressed
             send "{" A_thisHotkey "}" ;hotkey
     }
-}
-
-openMyComputer(*) {
-    Run("::{20D04FE0-3AEA-1069-A2D8-08002B30309D}")
-}
-
-openRecycleBin(*) {
-    Run("::{645FF040-5081-101B-9F08-00AA002F954E}")
-}
-
-openMyDocuments(*) {
-    Run(A_MyDocuments)
-}
-
-openMyDownloadFolder(*) {
-    Run("C:\users\" A_userName "\Downloads")
-}
-
-openMyDesktop(*) {
-    Run(A_desktop)
 }

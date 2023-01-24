@@ -5,21 +5,6 @@ The script includes 155 built-in symbols and special characters and allows for t
 
 ----
 
-### Table of Contents
-
-- ### [Features](https://github.com/bceenaeiklmr/SendText#features)
-- ### [How to use it?](https://github.com/bceenaeiklmr/SendText/edit/main/README.md#how-to-use-it)
-- ### [Texts & hostrings in the ini file](https://github.com/bceenaeiklmr/SendText#define-a-new-menu-category)
-- ### [Define a New Menu Category](https://github.com/bceenaeiklmr/SendText#define-a-new-menu-category)
-- ### [Creating Menu items](https://github.com/bceenaeiklmr/SendText#creating-menu-items)
-- ### [Send support](https://github.com/bceenaeiklmr/SendText#send-support)
-- ### [Reselect a word](https://github.com/bceenaeiklmr/SendText#reselect-a-word)
-- ### [Sending longer texts](https://github.com/bceenaeiklmr/SendText#sending-longer-texts)
-- ### [Add to your existing menu](https://github.com/bceenaeiklmr/SendText#add-to-your-existing-menu)
-- ### [Why not IniRead?](https://github.com/bceenaeiklmr/SendText#ahk---iniread)
-
-----
-
 ## Features
 
 - send texts via win32 menus or using hotstrings

@@ -59,7 +59,7 @@ hearths                  | hearth                       | 🥰
 thinking                 | think                        | 🤔
 ```
 
-Here are a few example of each categories:
+Here are a few examples of each category:
 - `[Roman Numerals]` I, II, III, IV, ...  
 - `[AutoHotkey]` keystrokes with Send()
 - `[Brackets]` 〔...〕, ⌜⌝, ...

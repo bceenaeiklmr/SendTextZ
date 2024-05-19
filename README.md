@@ -1,5 +1,5 @@
-# SendText
-SendText is an AutoHotkey v2 script that simplifies the management of your hotstrings and text snippets.
+# SendTextZ
+SendTextZ is an AutoHotkey v2 script that simplifies the management of your hotstrings and text snippets.
 
 The script includes 155 built-in symbols and special characters and allows for the quick and easy addition of new texts and hotstrings.
 
@@ -21,8 +21,8 @@ The script includes 155 built-in symbols and special characters and allows for t
 
 Please note ☝ this script `#Requires AutoHotkey >=2.0`.  
 
-1. Download both [SendText.ahk](https://github.com/bceenaeiklmr/SendText/blob/main/SendText.ahk) and [hotstring.ini](https://github.com/bceenaeiklmr/SendText/blob/main/hotstring.ini) into the same folder.
-2. Run [SendText.ahk](https://github.com/bceenaeiklmr/SendText/blob/main/SendText.ahk)
+1. Download both [SendTextZ.ahk](https://github.com/bceenaeiklmr/SendText/blob/main/SendTextZ.ahk) and [hotstring.ini](https://github.com/bceenaeiklmr/SendTextZ/blob/main/hotstring.ini) into the same folder.
+2. Run [SendTextZ.ahk](https://github.com/bceenaeiklmr/SendText/blob/main/SendTextZ.ahk)
 3. Hold `Mbutton` down for at least 500 ms or press simultaneously `Win + c` to show the menu.
 4. Select an element and the text will be pasted into the last active window.
      
@@ -129,7 +129,7 @@ Please note, the default keystrokes in the ini file are for Visual Studio Code. 
 
 Will display
 
-`(x = y) ? 1 : 0` and the selected string will texts `x = y`.
+`(x = y) ? 1 : 0` and the selected string will text `x = y`.
 
 ### - example 3 -
 

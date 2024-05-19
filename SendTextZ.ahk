@@ -1,13 +1,13 @@
-; Script     SendText.ahk
+; Script     SendTextZ.ahk
 ; License:   MIT License
 ; Author:    Bence Markiel (bceenaeiklmr)
-; Github:    https://github.com/bceenaeiklmr/SendText
-; Date       20.02.2023
-; Version    0.2
+; Github:    https://github.com/bceenaeiklmr/SendTextZ
+; Date       19.05.2024
+; Version    0.2.2
 
 #Requires AutoHotkey >=2.0
-#Warn
-#SingleInstance
+#SingleInstance Force
+#Warn All
 
 ; ############################################
 
@@ -48,9 +48,9 @@ MButton::showMain(0) ; middle mouse button after 500 ms
 
 sendText(TriggerHotkey := ":") {
     
-    ; Unfortunately, IniRead doesn't support UTF-16 which is neccessary to use emojis
+    ; Unfortunately, IniRead doesn't support UTF-16 which is necessary to use emojis
     Input := FileRead(A_ScriptDir "\hotstring.ini")
-    ; temporaly replace OR
+    ; temporarily replace OR
     InputFile := StrReplace(Input, "||", "Ͻ")
     Sect := Array()
     

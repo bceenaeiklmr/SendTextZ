@@ -2,145 +2,92 @@
 ; License:   MIT License
 ; Author:    Bence Markiel (bceenaeiklmr)
 ; Github:    https://github.com/bceenaeiklmr/SendTextZ
-; Date       19.05.2024
-; Version    0.2.2
+; Date       13.10.2026
+; Version    0.4.0
 
-#Requires AutoHotkey >=2.0
-#SingleInstance Force
-#Warn All
+SendTextZ
 
-; ############################################
+SendTextZ(triggerHotkey := ":") {
 
-Main := Menu()
-Sys  := Menu()
+    ; Main menu.
+    texts := Menu()
 
-Main.Add("System", sys)
-Sys.Add("My computer",  (*) => Run("::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"))
-Sys.Add("Recycle bin",  (*) => Run("::{645FF040-5081-101B-9F08-00AA002F954E}"))
-Sys.Add("Downloads",    (*) => Run("C:\users\" A_userName "\Downloads"))
-Sys.Add("My documents", (*) => Run(A_MyDocuments))
-Sys.Add("My desktop",   (*) => Run(A_Desktop))
+    ; Read INI file (relative to this script's directory for standalone compatibility).
+    SplitPath(A_LineFile,, &dir)
+    fileName := dir "\hotstring.ini"
+    if (!FileExist(fileName))
+        return
 
-Text := sendText(":")
-Main.Add("Texts", Text)
+    sections := IniRead(fileName)
 
-previewIcon := 0
-if previewIcon {
-    pIcon := PreviewIcons()
-    Main.Add("Icons", pIcon)
-}
-
-; set icons
-Main.SetIcon("Texts",       "Shell32.dll", 75)
-Main.SetIcon("System",      "Shell32.dll", 16)
-Sys.SetIcon("My computer",  "Shell32.dll", 16)
-Sys.SetIcon("Recycle bin",  "Shell32.dll", 32)
-Sys.SetIcon("My documents", "Shell32.dll", 39)
-Sys.SetIcon("Downloads",    "Shell32.dll", 46)
-Sys.SetIcon("My desktop",   "Shell32.dll",  5)
-
-; ############################################
-
-#c::showMain(1)      ; windows + c, instantly
-MButton::showMain(0) ; middle mouse button after 500 ms
-
-; ############################################
-
-sendText(TriggerHotkey := ":") {
-    
-    ; Unfortunately, IniRead doesn't support UTF-16 which is necessary to use emojis
-    Input := FileRead(A_ScriptDir "\hotstring.ini")
-    ; temporarily replace OR
-    InputFile := StrReplace(Input, "||", "Ͻ")
-    Sect := Array()
-    
-    loop Parse, InputFile, "`n" {
-        
-        ; skip empty and comment lines
-        if (A_LoopField ~= "^;") || (3 > StrLen(A_LoopField))
+    ; Read sections and create section menus.
+    for section in StrSplit(sections, "`n") {
+        section := Trim(section)
+        if (!section)
             continue
-        Line := StrReplace(A_LoopField, Chr(13))
-        ; category names
-        if RegExMatch(Line, "^\[\w+(\s\w+)*\]", &Lines) {    ; regex
-            Name := Trim(SubStr(Lines[], 2, -1))
-            Sect.Push({ Name: Name, Hotkeys: [] })
-        } else { ; hotkeys
-            ; columns are separated by the pipe '|' chr
-            Col := StrSplit(Line, "|")
-            for v in Col {
-                Col[A_index] := Trim(v)
-                ; make `n chars visible in menus
-                if (A_index = 4)
-                    Col[A_index] := StrReplace(v, "``n", "`n")
-                if InStr(v, "Ͻ")
-                    Col[A_index] := StrReplace(v, "Ͻ", "||")
+
+        sectMenu := Menu()
+       
+        ; Read keys from section.
+        keys := IniRead(fileName, section)
+        for line in StrSplit(keys, "`n") {
+            line := Trim(line)
+            if (!line || SubStr(line, 1, 1) == ";")
+                continue
+
+            key := line
+            ; Temporarily replace OR with a different character.
+            if InStr(key, "||")
+                key := StrReplace(key, "||", "Ͻ")
+            
+            parts := StrSplit(key, "|")
+            if (parts.Length < 3)
+                continue
+
+            for v in parts
+                parts[A_Index] := Trim(v)
+            
+            ; Make `n chars visible in menus.
+            if (parts.Length >= 4 && InStr(parts[4], "``n")) 
+                parts[4] := StrReplace(parts[4], "``n", "`n")
+            
+            ; Replace temporary character.
+            if InStr(parts[3], "Ͻ")
+                parts[3] := StrReplace(parts[3], "Ͻ", "||")
+
+            pre := parts[1]
+            txt := parts[3]
+            str := (parts.Length < 4) ? parts[3] : parts[4]
+
+            sectMenu.Add(pre "`t" txt, SendStr.Bind(str))
+
+            ; Create hotstring.
+            for hotStr in StrSplit(parts[2], ",") {
+                cleanHotStr := Trim(hotStr)
+                if (cleanHotStr != "")
+                    HotString(":*:" triggerHotkey cleanHotStr, SendStr.Bind(str))
             }
-
-            obj := { Preview : Col[1]
-                   , Hotstrg : Col[2]
-                   , Text    : Col[3]
-                   , Code    : (4 > Col.length) ? "" : Col[4] }
-
-            Sect[Sect.Length].Hotkeys.Push(obj)
         }
+
+        texts.Add(section, sectMenu)
     }
-    ; create menus
-    Texts := Menu()
-    for v in Sect {
-        SectMenu := Menu()
-        for hk in v.Hotkeys {
-            Strg := Trim((hk.Code !== "") ? hk.Code : hk.Text)
-            Sectmenu.Add(hk.Preview "`t" hk.Text, SendStr.Bind(Strg))
-            ; register hotstrings
-            hStrings := StrSplit(hk.HotStrg, ",")
-            for hStr in hStrings
-                HotString(":*:" TriggerHotkey Trim(hStr), SendStr.Bind(Strg))
-        }
-        texts.Add(v.Name, sectmenu)
+
+    if IsSet(W32menu) && HasProp(W32menu, "main") {
+        W32menu.main.Add("Texts", texts)
+        W32menu.main.SetIcon("Texts", "Shell32.dll", 75)
+    } else {
+        mainMenu := Menu()
+        mainMenu.Add("Texts", texts)
+        mainMenu.SetIcon("Texts", "Shell32.dll", 75)
+        Hotkey("#c", (*) => mainMenu.Show())
     }
     return texts
 }
 
-SendStr(Strg, *) {
-    if (SubStr(Strg, 1, 1) == "*")
-        return Send(SubStr(Strg, 2))
-    ClipSaved := ClipboardAll()
-    A_Clipboard := Strg
-    if ClipWait(.5, 1) {
-        Send("{CtrlDown}v{CtrlUp}")
-        Sleep 100
+SendStr(str, *) {
+    if (SubStr(str, 1, 1) == "*") {
+        return Send(SubStr(str, 2))
     }
-    A_Clipboard := ClipSaved
+    SendText(str)
     return
-}
-
-showMain(Instant := 1) {
-    if Instant
-        Main.Show()
-    else {
-        pressed := 0
-        while getKeyState(A_thisHotkey,"P") {
-            if (A_TimeSinceThisHotkey > 500) {
-                Main.Show()
-                pressed := 1
-            }
-        }
-        if !pressed
-            send "{" A_thisHotkey "}"
-    }
-}
-
-PreviewIcons() {
-    IconMenu := Menu()
-    loop 10 {
-        index := A_index
-        submenu := Menu()
-        IconMenu.Add(A_index, submenu)
-        loop 32 {
-            index2 := A_index + 32*(index2-1)
-            submenu.Add(index2, (*) => "")
-            submenu.SetIcon(index2, "Shell32.dll", A_index + 32*(index-1))
-        }
-    }
-    return IconMenu
 }

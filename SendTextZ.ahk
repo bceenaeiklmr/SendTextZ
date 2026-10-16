@@ -8,6 +8,8 @@
 SendTextZ
 
 SendTextZ(triggerHotkey := ":") {
+    local texts, sections, sectMenu, keys, line, key, parts
+    local pre, txt, str, cleanHotStr, fileName, dir, hotStr
 
     ; Main menu.
     texts := Menu()
